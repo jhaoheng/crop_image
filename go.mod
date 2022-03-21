@@ -1,4 +1,4 @@
-module jhaoheng/crop_image
+module github.com/jhaoheng/crop_image
 
 go 1.17
 
