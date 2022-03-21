@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_read_image(t *testing.T) {
+func Test_NewCropReadByByte(t *testing.T) {
 
 	type Data struct {
 		input_file       string
@@ -18,11 +18,11 @@ func Test_read_image(t *testing.T) {
 
 	datas := []Data{
 		0: {
-			input_file:       "../test_image/unknow.png",
+			input_file:       "./test_image/unknow.png",
 			output_file_type: "png",
 		},
 		1: {
-			input_file:       "../test_image/unknow2.jpg",
+			input_file:       "./test_image/unknow.jpg",
 			output_file_type: "jpeg",
 		},
 	}
@@ -30,8 +30,9 @@ func Test_read_image(t *testing.T) {
 	for _, data := range datas {
 		reader, _ := os.Open(data.input_file)
 		b, _ := ioutil.ReadAll(reader)
-		info, err := NewMedia(b).ReadImage()
+		new_crop, err := NewCropReadByByte(b)
 		assert.NoError(t, err)
+		info := new_crop.GetOriImgInfo()
 		assert.Equal(t, data.output_file_type, info.FileType)
 		fmt.Printf("file_type: %v, size: %v KB\n", info.FileType, info.Size.KB())
 

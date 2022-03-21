@@ -11,7 +11,7 @@ import (
 )
 
 // ex: crop_rect := image.Rect(0, 0, 800, 600)
-func (mi *MediaObj) CropImage(crop_rect image.Rectangle) (b64_img string, err error) {
+func (mi *ImageObj) CropImage(crop_rect image.Rectangle) (b64_img string, err error) {
 	if mi.Ori.FileType == "png" {
 		b64_img = mi.CropImageToPNG(crop_rect)
 	} else if mi.Ori.FileType == "jpeg" {
@@ -23,7 +23,7 @@ func (mi *MediaObj) CropImage(crop_rect image.Rectangle) (b64_img string, err er
 	return
 }
 
-func (mi *MediaObj) CropImageToJPEG(crop_rect image.Rectangle) (b64_img string) {
+func (mi *ImageObj) CropImageToJPEG(crop_rect image.Rectangle) (b64_img string) {
 
 	m := image.NewRGBA(crop_rect)
 	draw.Draw(m, m.Bounds(), mi.Ori.Image, image.Point{0, 0}, draw.Src)
@@ -31,7 +31,7 @@ func (mi *MediaObj) CropImageToJPEG(crop_rect image.Rectangle) (b64_img string) 
 	buf := bytes.Buffer{}
 	jpeg.Encode(&buf, m, &jpeg.Options{Quality: 100})
 
-	mi.Crops = append(mi.Crops, MediaInfo{
+	mi.Crops = append(mi.Crops, ImageInfo{
 		Image:     m,
 		Bytes:     buf.Bytes(),
 		FileType:  mi.Ori.FileType,
@@ -42,14 +42,14 @@ func (mi *MediaObj) CropImageToJPEG(crop_rect image.Rectangle) (b64_img string) 
 	return base64.RawStdEncoding.EncodeToString(buf.Bytes())
 }
 
-func (mi *MediaObj) CropImageToPNG(crop_rect image.Rectangle) (b64_img string) {
+func (mi *ImageObj) CropImageToPNG(crop_rect image.Rectangle) (b64_img string) {
 	m := image.NewRGBA(crop_rect)
 	draw.Draw(m, m.Bounds(), mi.Ori.Image, crop_rect.Min, draw.Src)
 
 	buf := bytes.Buffer{}
 	png.Encode(&buf, m)
 
-	mi.Crops = append(mi.Crops, MediaInfo{
+	mi.Crops = append(mi.Crops, ImageInfo{
 		Image:     m,
 		Bytes:     buf.Bytes(),
 		FileType:  mi.Ori.FileType,
