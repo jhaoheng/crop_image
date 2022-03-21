@@ -1,0 +1,3 @@
+test_image/*
+crop_image_test_output/*
+!crop_image_test_output/.gitkeep
